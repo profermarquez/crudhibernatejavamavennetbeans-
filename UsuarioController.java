@@ -27,6 +27,31 @@ import org.hibernate.cfg.Configuration;
  * @author Sebastian
  */
 public class UsuarioController {
+
+    public int getUsuarioId(String nombre, String apellido)
+    {
+        
+        File configFilePath  = new File("cfg.xml");
+            SessionFactory sessionFactory =new
+                Configuration().configure(configFilePath).addAnnotatedClass(Usuario.class)
+                    .buildSessionFactory();
+            Session session = sessionFactory.openSession();
+            int r=0;
+            try{
+                session.beginTransaction();
+               Query query = session.createSQLQuery("select id from usuarios where nombre='"+nombre+"' and apellido='"+apellido+"'");
+               
+                r = Integer.parseInt(query.uniqueResult().toString());
+                
+                session.getTransaction().commit();
+                sessionFactory.close();
+                
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        return r;
+    }
     public String createUsuario(String nombre, String apellido, String direccion)
         {
             File configFilePath  = new File("cfg.xml");
